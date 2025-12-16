@@ -18,6 +18,10 @@
     flake-parts.lib.mkFlake {inherit self inputs;} {
       inherit systems;
 
+      flake = {
+        lib.src = self;
+      };
+
       perSystem = {pkgs, ...}: {
         formatter = pkgs.alejandra;
 
