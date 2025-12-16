@@ -19,7 +19,7 @@
 //! fn confirm(text: String) -> Button {
 //!     Button {
 //!         text,
-//!         background_color: catppuccin::PALETTE.mocha.colors.green.hex.to_string(),
+//!         background_color: catppuccin::PALETTE.dark.colors.green.hex.to_string(),
 //!     }
 //! }
 //! ```
@@ -84,17 +84,13 @@ include!(concat!(env!("OUT_DIR"), "/generated_palette.rs"));
 /// Primarily used via the [`PALETTE`] constant.
 ///
 /// Can be iterated over, in which case the flavors are yielded in the canonical order:
-/// Latte, Frappé, Macchiato, Mocha.
+/// Light, Frappé, Macchiato, Dark.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Palette {
     /// The light flavor.
-    pub latte: Flavor,
-    /// The lightest dark flavor.
-    pub frappe: Flavor,
-    /// The medium dark flavor.
-    pub macchiato: Flavor,
-    /// The darkest dark flavor.
-    pub mocha: Flavor,
+    pub light: Flavor,
+    /// The dark flavor.
+    pub dark: Flavor,
 }
 
 /// Enum of all four flavors of Catppuccin. Can be used to index [`Palette`].
@@ -102,14 +98,9 @@ pub struct Palette {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum FlavorName {
     /// The light flavor.
-    Latte,
-    /// The lightest dark flavor.
-    #[cfg_attr(feature = "serde", serde(rename = "Frappé"))]
-    Frappe,
-    /// The medium dark flavor.
-    Macchiato,
-    /// The darkest dark flavor.
-    Mocha,
+    Light,
+    /// The dark flavor.
+    Dark,
 }
 
 /// An iterator over flavors in the palette.
@@ -168,8 +159,8 @@ pub struct Color {
     pub hsl: Hsl,
 }
 
-/// A flavor is a collection of colors. Catppuccin has four flavors; Latte,
-/// Frappé, Macchiato, and Mocha.
+/// A flavor is a collection of colors. Catppuccin has four flavors; Light,
+/// Frappé, Macchiato, and Dark.
 ///
 /// Can be iterated over, in which case the colors are yielded in order.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -181,7 +172,7 @@ pub struct Flavor {
     pub emoji: char,
     /// Order of the flavor in the palette spec.
     pub order: u32,
-    /// Whether this flavor is dark or light oriented. Latte is light, the other
+    /// Whether this flavor is dark or light oriented. Light is light, the other
     /// three flavors are dark.
     pub dark: bool,
     /// The colors in the flavor.
@@ -216,8 +207,8 @@ pub struct AnsiColorPairsIterator<'a> {
 impl Palette {
     /// Get an array of the flavors in the palette.
     #[must_use]
-    pub const fn all_flavors(&self) -> [&Flavor; 4] {
-        [&self.latte, &self.frappe, &self.macchiato, &self.mocha]
+    pub const fn all_flavors(&self) -> [&Flavor; 2] {
+        [&self.light, &self.dark]
     }
 
     /// Create an iterator over the flavors in the palette.
@@ -235,10 +226,8 @@ impl Index<FlavorName> for Palette {
 
     fn index(&self, index: FlavorName) -> &Self::Output {
         match index {
-            FlavorName::Latte => &self.latte,
-            FlavorName::Frappe => &self.frappe,
-            FlavorName::Macchiato => &self.macchiato,
-            FlavorName::Mocha => &self.mocha,
+            FlavorName::Light => &self.light,
+            FlavorName::Dark => &self.dark,
         }
     }
 }
@@ -251,10 +240,8 @@ impl Palette {
     #[must_use]
     pub const fn get_flavor(&self, name: FlavorName) -> &Flavor {
         match name {
-            FlavorName::Latte => &self.latte,
-            FlavorName::Frappe => &self.frappe,
-            FlavorName::Macchiato => &self.macchiato,
-            FlavorName::Mocha => &self.mocha,
+            FlavorName::Light => &self.light,
+            FlavorName::Dark => &self.dark,
         }
     }
 }
@@ -300,10 +287,8 @@ mod _hex {
 impl fmt::Display for FlavorName {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::Latte => write!(f, "Latte"),
-            Self::Frappe => write!(f, "Frappé"),
-            Self::Macchiato => write!(f, "Macchiato"),
-            Self::Mocha => write!(f, "Mocha"),
+            Self::Light => write!(f, "Light"),
+            Self::Dark => write!(f, "Dark"),
         }
     }
 }
@@ -316,7 +301,7 @@ impl std::fmt::Display for ParseFlavorNameError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "invalid flavor identifier, expected one of: latte, frappe, frappé, macchiato, mocha"
+            "invalid flavor identifier, expected one of: light, dark"
         )
     }
 }
@@ -326,10 +311,8 @@ impl FromStr for FlavorName {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "latte" => Ok(Self::Latte),
-            "frappe" | "frappé" => Ok(Self::Frappe),
-            "macchiato" => Ok(Self::Macchiato),
-            "mocha" => Ok(Self::Mocha),
+            "light" | "latte" => Ok(Self::Light),
+            "dark" | "mocha" => Ok(Self::Dark),
             _ => Err(ParseFlavorNameError),
         }
     }
@@ -350,10 +333,8 @@ impl FlavorName {
     #[must_use]
     pub const fn identifier(&self) -> &'static str {
         match self {
-            Self::Latte => "latte",
-            Self::Frappe => "frappe",
-            Self::Macchiato => "macchiato",
-            Self::Mocha => "mocha",
+            Self::Light => "light",
+            Self::Dark => "dark",
         }
     }
 }
