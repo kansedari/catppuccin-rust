@@ -1,3 +1,5 @@
 .cache
 Cargo.lock
 target/
+.direnv
+.envrc
