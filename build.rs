@@ -145,14 +145,14 @@ fn palette_circle(filename: &str) -> String {
 }
 
 fn color_palette_circles(color_key: &str) -> String {
-    ["latte", "frappe", "macchiato", "mocha"]
+    ["latte", "mocha"]
         .map(|n| palette_circle(format!("{n}_{color_key}").as_str()))
         .into_iter()
         .collect::<String>()
 }
 
 fn ansi_color_palette_circles(color_key: &str) -> String {
-    ["latte", "frappe", "macchiato", "mocha"]
+    ["latte", "mocha"]
         .map(|n| palette_circle(format!("ansi/{n}_ansi_{color_key}").as_str()))
         .into_iter()
         .collect::<String>()
